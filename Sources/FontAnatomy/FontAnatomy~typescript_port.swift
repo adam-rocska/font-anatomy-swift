@@ -9,7 +9,7 @@ public enum FontAnatomyMetric: String, CaseIterable, Sendable {
   case capHeight
 }
 
-public struct FontAnatomy: Codable, Equatable, Sendable {
+public struct FontAnatomy_portedSlop: Codable, Equatable, Sendable {
   public var unitsPerEm: Double
   public var ascender: Double
   public var descender: Double
@@ -52,10 +52,12 @@ public struct FontAnatomy: Codable, Equatable, Sendable {
   }
 }
 
-public func relativize(_ basedOn: FontAnatomyMetric, _ anatomy: FontAnatomy) -> FontAnatomy {
+public func relativize(
+  _ basedOn: FontAnatomyMetric, _ anatomy: FontAnatomy_portedSlop
+) -> FontAnatomy_portedSlop {
   let basis = anatomy[basedOn]
 
-  return FontAnatomy(
+  return FontAnatomy_portedSlop(
     unitsPerEm: anatomy.unitsPerEm / basis,
     ascender: anatomy.ascender / basis,
     descender: anatomy.descender / basis,
@@ -65,12 +67,12 @@ public func relativize(_ basedOn: FontAnatomyMetric, _ anatomy: FontAnatomy) -> 
 }
 
 public func concretize(
-  _ archetype: FontAnatomy,
+  _ archetype: FontAnatomy_portedSlop,
   _ attribute: FontAnatomyMetric,
   _ value: Double
-) -> FontAnatomy {
+) -> FontAnatomy_portedSlop {
   let proportion = value / archetype[attribute]
-  var result = FontAnatomy(
+  var result = FontAnatomy_portedSlop(
     unitsPerEm: archetype.unitsPerEm * proportion,
     ascender: archetype.ascender * proportion,
     descender: archetype.descender * proportion,
@@ -82,21 +84,11 @@ public func concretize(
 }
 
 public func equate(
-  _ base: FontAnatomy,
-  _ anatomy: FontAnatomy,
+  _ base: FontAnatomy_portedSlop,
+  _ anatomy: FontAnatomy_portedSlop,
   _ field: FontAnatomyMetric
-) -> FontAnatomy {
+) -> FontAnatomy_portedSlop {
   concretize(anatomy, field, base[field])
-}
-
-public struct FreeTypeVersion: Equatable, Sendable, CustomStringConvertible {
-  public var major: Int
-  public var minor: Int
-  public var patch: Int
-
-  public var description: String {
-    "\(major).\(minor).\(patch)"
-  }
 }
 
 public enum FontAnatomyError: Error, Equatable, CustomStringConvertible {
@@ -134,35 +126,27 @@ public final class FreeTypeLibrary {
     }
   }
 
-  public var version: FreeTypeVersion {
-    var major: FT_Int = 0
-    var minor: FT_Int = 0
-    var patch: FT_Int = 0
-
-    FT_Library_Version(library, &major, &minor, &patch)
-
-    return FreeTypeVersion(
-      major: Int(major),
-      minor: Int(minor),
-      patch: Int(patch)
-    )
-  }
-
-  public func anatomy(fromFontData data: Data) throws -> FontAnatomy {
+  public func anatomy(fromFontData data: Data) throws -> FontAnatomy_portedSlop
+  {
     try data.withUnsafeBytes { bytes in
       try anatomy(fromUnsafeBytes: bytes)
     }
   }
 
-  public func anatomy(fromFontBytes bytes: [UInt8]) throws -> FontAnatomy {
+  public func anatomy(fromFontBytes bytes: [UInt8]) throws
+    -> FontAnatomy_portedSlop
+  {
     try bytes.withUnsafeBytes { bytes in
       try anatomy(fromUnsafeBytes: bytes)
     }
   }
 
-  private func anatomy(fromUnsafeBytes bytes: UnsafeRawBufferPointer) throws -> FontAnatomy {
+  private func anatomy(fromUnsafeBytes bytes: UnsafeRawBufferPointer) throws
+    -> FontAnatomy_portedSlop
+  {
     guard let baseAddress = bytes.baseAddress else {
-      throw FontAnatomyError.fontFaceLoadFailed(code: Int32(FT_Err_Cannot_Open_Resource))
+      throw FontAnatomyError.fontFaceLoadFailed(
+        code: Int32(FT_Err_Cannot_Open_Resource))
     }
 
     var face: FT_Face?
@@ -188,7 +172,7 @@ public final class FreeTypeLibrary {
 
     let os2 = os2Table.assumingMemoryBound(to: TT_OS2.self).pointee
 
-    return FontAnatomy(
+    return FontAnatomy_portedSlop(
       unitsPerEm: Double(face.pointee.units_per_EM),
       ascender: Double(face.pointee.ascender),
       descender: Double(face.pointee.descender),
@@ -197,19 +181,19 @@ public final class FreeTypeLibrary {
     )
   }
 
-  public func anatomy(fromFontFile url: URL) throws -> FontAnatomy {
+  public func anatomy(fromFontFile url: URL) throws -> FontAnatomy_portedSlop {
     try anatomy(fromFontData: Data(contentsOf: url))
   }
 }
 
-public func fromFontBinary(_ data: Data) throws -> FontAnatomy {
+public func fromFontBinary(_ data: Data) throws -> FontAnatomy_portedSlop {
   try FreeTypeLibrary().anatomy(fromFontData: data)
 }
 
-public func fromFontBinary(_ bytes: [UInt8]) throws -> FontAnatomy {
+public func fromFontBinary(_ bytes: [UInt8]) throws -> FontAnatomy_portedSlop {
   try FreeTypeLibrary().anatomy(fromFontBytes: bytes)
 }
 
-public func fromFontFile(_ url: URL) throws -> FontAnatomy {
+public func fromFontFile(_ url: URL) throws -> FontAnatomy_portedSlop {
   try FreeTypeLibrary().anatomy(fromFontFile: url)
 }
