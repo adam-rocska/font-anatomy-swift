@@ -10,12 +10,24 @@ let package = Package(
     )
   ],
   targets: [
+    .systemLibrary(
+      name: "CFreeType",
+      pkgConfig: "freetype2",
+      providers: [
+        .brew(["freetype"]),
+        .apt(["libfreetype6-dev"]),
+      ]
+    ),
     .target(
-      name: "FontAnatomy"
+      name: "FontAnatomy",
+      dependencies: ["CFreeType"]
     ),
     .testTarget(
       name: "FontAnatomyTests",
-      dependencies: ["FontAnatomy"]
+      dependencies: ["FontAnatomy"],
+      resources: [
+        .copy("Fixtures"),
+      ]
     ),
   ]
 )
