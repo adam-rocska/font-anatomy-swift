@@ -1,5 +1,6 @@
 public func relativize(
-  _ basedOn: FontAnatomyMetric, _ anatomy: FontAnatomy_portedSlop
+  _ basedOn: FontAnatomyMetric,
+  _ anatomy: FontAnatomy_portedSlop
 ) -> FontAnatomy_portedSlop {
   let basis = anatomy[basedOn]
 
