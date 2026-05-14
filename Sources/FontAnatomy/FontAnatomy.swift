@@ -6,3 +6,7 @@ where Value: Sendable {
   public var xHeight: Value
   public var capHeight: Value
 }
+
+extension FontAnatomy: Codable where Value: Codable {}
+extension FontAnatomy: Equatable where Value: Equatable {}
+extension FontAnatomy: Hashable where Value: Hashable {}
