@@ -13,12 +13,6 @@ let package = Package(
   products: [
     .library(name: "FontAnatomy", targets: ["FontAnatomy"])
   ],
-  dependencies: [
-    .package(
-      url: "https://github.com/adam-rocska/VersionInfo.swift",
-      from: "1.0.0"
-    )
-  ],
   targets: [
     .systemLibrary(
       name: "CFreeType",
@@ -32,8 +26,7 @@ let package = Package(
     .target(
       name: "FontAnatomy",
       dependencies: [
-        .byName(name: "CFreeType"),
-        .product(name: "VersionInfo", package: "VersionInfo.swift"),
+        .byName(name: "CFreeType")
       ]
     ),
     .testTarget(
