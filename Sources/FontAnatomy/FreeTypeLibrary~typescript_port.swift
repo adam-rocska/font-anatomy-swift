@@ -1,3 +1,6 @@
+import CFreeType
+import Foundation
+
 public final class FreeTypeLibrary {
   private var library: FT_Library?
 
