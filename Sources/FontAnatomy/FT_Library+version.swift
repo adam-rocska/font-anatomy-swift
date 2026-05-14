@@ -2,7 +2,7 @@ import CFreeType
 import VersionInfo
 
 extension FT_Library {
-  public lazy var version: SemanticVersion = {
+  public var version: SemanticVersion? {
     var major: FT_Int = 0
     var minor: FT_Int = 0
     var patch: FT_Int = 0
