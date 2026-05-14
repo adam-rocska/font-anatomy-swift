@@ -8,7 +8,8 @@ public final class FreeTypeLibrary {
     var library: FT_Library?
     let error = FT_Init_FreeType(&library)
     guard error == 0 else {
-      throw FontAnatomyError.freeTypeInitializationFailed(code: Int32(error))
+      throw FontAnatomyError.freeTypeInitializationFailed(
+        code: Int32(error))
     }
     self.library = library
   }

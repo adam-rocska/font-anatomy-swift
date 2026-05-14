@@ -1,11 +1,13 @@
 import CFreeType
 import Foundation
 
-extension FontAnatomyValue {
+extension FontAnatomy {
   public init(_ bytes: UnsafeRawBufferPointer) throws {
     var library: FT_Library?
     var error = FT_Init_FreeType(&library)
-    guard error == 0 else { throw Error.ftInitFailure(code: Int32(error)) }
+    guard error == 0 else {
+      throw Error.ftInitFailure(code: Int32(error))
+    }
     defer { if let library { FT_Done_FreeType(library) } }
 
     guard let baseAddress = bytes.baseAddress else {

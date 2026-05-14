@@ -1,9 +1,8 @@
-public protocol FontAnatomy: Sendable {
-  associatedtype Value: Sendable
-
-  var unitsPerEm: Value { get }
-  var ascender: Value { get }
-  var descender: Value { get }
-  var xHeight: Value { get }
-  var capHeight: Value { get }
+public struct FontAnatomy<Value>: Sendable
+where Value: Sendable {
+  public var unitsPerEm: Value
+  public var ascender: Value
+  public var descender: Value
+  public var xHeight: Value
+  public var capHeight: Value
 }
