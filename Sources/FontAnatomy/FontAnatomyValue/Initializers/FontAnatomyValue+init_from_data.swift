@@ -1,9 +1,7 @@
 import Foundation
 
 extension FontAnatomyValue {
-  public init(data: Data) throws {
-    self = try data.withUnsafeBytes { bytes in
-      try Self(unsafeBytes: bytes)
-    }
+  public init(_ data: Data) throws {
+    self = try data.withUnsafeBytes { try Self($0) }
   }
 }

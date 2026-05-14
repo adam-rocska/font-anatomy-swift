@@ -1,7 +1,7 @@
 import Foundation
 
 extension FontAnatomyValue {
-  public init(url: URL) throws {
+  public init(_ url: URL) throws {
     guard url.isFileURL else { throw Error.invalidFileUrl(url) }
 
     let data: Data
@@ -11,6 +11,6 @@ extension FontAnatomyValue {
       throw Error.fileContentReadFailure(url, error)
     }
 
-    try self.init(data: data)
+    try self.init(data)
   }
 }

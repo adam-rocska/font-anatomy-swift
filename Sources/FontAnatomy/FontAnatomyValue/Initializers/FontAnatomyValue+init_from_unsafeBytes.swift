@@ -2,7 +2,7 @@ import CFreeType
 import Foundation
 
 extension FontAnatomyValue {
-  public init(unsafeBytes bytes: UnsafeRawBufferPointer) throws {
+  public init(_ bytes: UnsafeRawBufferPointer) throws {
     var library: FT_Library?
     var error = FT_Init_FreeType(&library)
     guard error == 0 else { throw Error.ftInitFailure(code: Int32(error)) }

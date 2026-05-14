@@ -1,7 +1,7 @@
 import Foundation
 
 extension FontAnatomyValue {
-  public init(path: String) throws {
-    try self.init(url: URL(fileURLWithPath: path))
+  public init(_ path: String) throws {
+    try self.init(URL(fileURLWithPath: path))
   }
 }
