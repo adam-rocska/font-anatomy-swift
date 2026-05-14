@@ -14,9 +14,7 @@ public final class FreeTypeLibrary {
   }
 
   deinit {
-    if let library {
-      FT_Done_FreeType(library)
-    }
+    if let library { FT_Done_FreeType(library) }
   }
 
   public func anatomy(fromFontData data: Data) throws -> FontAnatomy_portedSlop
