@@ -5,12 +5,17 @@ extension FontAnatomy where Value: FloatingPoint {
     as value: Value
   ) {
     let proportion = value / prototype[keyPath: keyPath]
+    let resolve = { (metric: KeyPath<Self, Value>) in
+      metric == keyPath
+        ? value
+        : prototype[keyPath: metric] * proportion
+    }
     self.init(
-      unitsPerEm: prototype.unitsPerEm * proportion,
-      ascender: prototype.ascender * proportion,
-      descender: prototype.descender * proportion,
-      xHeight: prototype.xHeight * proportion,
-      capHeight: prototype.capHeight * proportion
+      unitsPerEm: resolve(\.unitsPerEm),
+      ascender: resolve(\.ascender),
+      descender: resolve(\.descender),
+      xHeight: resolve(\.xHeight),
+      capHeight: resolve(\.capHeight)
     )
   }
 
