@@ -12,4 +12,4 @@ public enum FontAnatomyError: Error {
   case attributeTypeCastFailure
 }
 
-extension FontAnatomy { typealias Error = FontAnatomyError }
+extension FontAnatomy { public typealias Error = FontAnatomyError }
