@@ -1,31 +1,31 @@
 extension FontAnatomy where Value: FloatingPoint {
   public init(
-    concretize anatomy: Self,
-    attribute keyPath: KeyPath<Self, Value>,
+    concretizing prototype: Self,
+    by keyPath: KeyPath<Self, Value>,
     as value: Value
   ) {
-    let proportion = value / anatomy[keyPath: keyPath]
+    let proportion = value / prototype[keyPath: keyPath]
     self.init(
-      unitsPerEm: anatomy.unitsPerEm * proportion,
-      ascender: anatomy.ascender * proportion,
-      descender: anatomy.descender * proportion,
-      xHeight: anatomy.xHeight * proportion,
-      capHeight: anatomy.capHeight * proportion
+      unitsPerEm: prototype.unitsPerEm * proportion,
+      ascender: prototype.ascender * proportion,
+      descender: prototype.descender * proportion,
+      xHeight: prototype.xHeight * proportion,
+      capHeight: prototype.capHeight * proportion
     )
   }
 
-  public func exactly(
+  public func concretized(
     _ keyPath: KeyPath<Self, Value>,
-    _ value: Value
+    as value: Value
   ) -> Self {
-    Self(concretize: self, attribute: keyPath, as: value)
+    Self(concretizing: self, by: keyPath, as: value)
   }
 
   public static func concretizing(
-    _ anatomy: Self,
-    attribute keyPath: KeyPath<Self, Value>,
+    _ prototype: Self,
+    by keyPath: KeyPath<Self, Value>,
     as value: Value
   ) -> Self {
-    Self(concretize: anatomy, attribute: keyPath, as: value)
+    Self(concretizing: prototype, by: keyPath, as: value)
   }
 }

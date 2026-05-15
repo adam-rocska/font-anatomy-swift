@@ -1,21 +1,21 @@
 extension FontAnatomy where Value: FloatingPoint {
   public init(
-    equate base: Self,
+    equating base: Self,
     with target: Self,
     by keyPath: KeyPath<Self, Value>
   ) {
     self.init(
-      concretize: target,
-      attribute: keyPath,
+      concretizing: target,
+      by: keyPath,
       as: base[keyPath: keyPath]
     )
   }
 
-  public func equate(
+  public func equated(
     with target: Self,
     by keyPath: KeyPath<Self, Value>
   ) -> Self {
-    Self(equate: self, with: target, by: keyPath)
+    Self(equating: self, with: target, by: keyPath)
   }
 
   public static func equating(
@@ -23,6 +23,6 @@ extension FontAnatomy where Value: FloatingPoint {
     with target: Self,
     by keyPath: KeyPath<Self, Value>
   ) -> Self {
-    Self(equate: base, with: target, by: keyPath)
+    Self(equating: base, with: target, by: keyPath)
   }
 }
