@@ -29,12 +29,37 @@ let package = Package(
         .byName(name: "CFreeType")
       ]
     ),
-    .testTarget(
-      name: "FontAnatomyTests",
+    .target(
+      name: "FontAnatomyTestSupport",
       dependencies: ["FontAnatomy"],
+      path: "Tests/Support",
       resources: [
         .copy("Fixtures")
       ]
+    ),
+    .testTarget(
+      name: "FontAnatomyTests",
+      dependencies: [
+        "FontAnatomy",
+        "FontAnatomyTestSupport",
+      ],
+      path: "Tests/Unit/FontAnatomyTests"
+    ),
+    .testTarget(
+      name: "FontAnatomyRegressionTests",
+      dependencies: [
+        "FontAnatomy",
+        "FontAnatomyTestSupport",
+      ],
+      path: "Tests/Regression/FontAnatomyRegressionTests"
+    ),
+    .testTarget(
+      name: "FontAnatomyUserAcceptanceTests",
+      dependencies: [
+        "FontAnatomy",
+        "FontAnatomyTestSupport",
+      ],
+      path: "Tests/UserAcceptance/FontAnatomyUserAcceptanceTests"
     ),
   ]
 )

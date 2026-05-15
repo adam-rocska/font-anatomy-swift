@@ -8,7 +8,7 @@ The first working slice includes:
 - `FT_Library` initialization and cleanup
 - TTF/OTF face loading from memory or file URLs
 - extraction of `unitsPerEm`, `ascender`, `descender`, `xHeight`, and `capHeight`
-- `relativize`, `concretize`, and `equate` metric transforms
+- relative, concretized, and equated metric transforms
 
 ## FreeType Dependency
 
@@ -38,8 +38,8 @@ import Foundation
 
 let url = URL(fileURLWithPath: "LibertinusSans-Regular.ttf")
 let anatomy = try fromFontFile(url)
-let relative = relativize(.unitsPerEm, anatomy)
-let twelvePointXHeight = concretize(anatomy, .xHeight, 12)
+let relative = anatomy.relative(to: \.unitsPerEm)
+let twelvePointXHeight = anatomy.concretized(\.xHeight, as: 12)
 ```
 
 ## Portability
