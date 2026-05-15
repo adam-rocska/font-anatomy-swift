@@ -107,6 +107,19 @@ struct FreeTypeFontLoadingTests {
     }
   }
 
+  @Test("Rejects nil unsafe raw buffer pointers")
+  func rejectsNilUnsafeRawBufferPointer() throws {
+    let bytes = UnsafeRawBufferPointer(start: nil, count: 0)
+
+    do {
+      _ = try FontAnatomy<Int>(bytes)
+      Issue.record("Expected nil raw buffer pointer to be rejected")
+    } catch FontAnatomyError.ftCantOpenResource {
+    } catch {
+      Issue.record("Unexpected error: \(error)")
+    }
+  }
+
   @Test("Rejects unsigned metric value types when the font contains a negative descender")
   func rejectsUnsignedMetricValueTypes() throws {
     let data = try Data(contentsOf: FontAnatomyFixture.libertinusSansRegularURL())
