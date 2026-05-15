@@ -9,6 +9,7 @@ public enum FontAnatomyError: Error {
   case ftCantOpenResource
   case ftLoadFailure(code: Int32)
   case missingOS2Table
+  case attributeTypeCastFailure
 }
 
 extension FontAnatomy { typealias Error = FontAnatomyError }

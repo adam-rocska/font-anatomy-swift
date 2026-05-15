@@ -1,6 +1,6 @@
 import Foundation
 
-extension FontAnatomy {
+extension FontAnatomy where Value: Numeric {
   public init(_ url: URL) throws {
     guard url.isFileURL else { throw Error.invalidFileUrl(url) }
 

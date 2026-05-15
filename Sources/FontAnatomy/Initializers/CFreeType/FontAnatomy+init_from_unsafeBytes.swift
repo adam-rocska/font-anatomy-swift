@@ -1,7 +1,7 @@
 import CFreeType
 import Foundation
 
-extension FontAnatomy {
+extension FontAnatomy where Value: Numeric {
   public init(_ bytes: UnsafeRawBufferPointer) throws {
     var library: FT_Library?
     var error = FT_Init_FreeType(&library)
@@ -32,12 +32,22 @@ extension FontAnatomy {
     }
     let os2 = os2Table.assumingMemoryBound(to: TT_OS2.self).pointee
 
+    guard
+      let unitsPerEm = Value(exactly: face.pointee.units_per_EM),
+      let ascender = Value(exactly: face.pointee.ascender),
+      let descender = Value(exactly: face.pointee.descender),
+      let xHeight = Value(exactly: os2.sxHeight),
+      let capHeight = Value(exactly: os2.sCapHeight)
+    else {
+      throw Error.attributeTypeCastFailure
+    }
+
     self = Self(
-      unitsPerEm: Double(face.pointee.units_per_EM),
-      ascender: Double(face.pointee.ascender),
-      descender: Double(face.pointee.descender),
-      xHeight: Double(os2.sxHeight),
-      capHeight: Double(os2.sCapHeight)
+      unitsPerEm: unitsPerEm,
+      ascender: ascender,
+      descender: descender,
+      xHeight: xHeight,
+      capHeight: capHeight
     )
   }
 

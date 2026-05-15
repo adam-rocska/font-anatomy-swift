@@ -1,6 +1,6 @@
 import Foundation
 
-extension FontAnatomy {
+extension FontAnatomy where Value: Numeric {
   public init(_ path: String) throws {
     try self.init(URL(fileURLWithPath: path))
   }
