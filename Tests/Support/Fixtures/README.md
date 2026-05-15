@@ -1,9 +1,9 @@
 # Test Font Fixture
 
-`LibertinusSans-Regular.ttf` is copied from the TypeScript implementation's
-test corpus to keep Swift package tests self-contained.
+The fixtures are copied from the TypeScript implementation's test corpus to
+keep Swift package tests self-contained.
 
-Font metadata reports:
+`LibertinusSans-Regular.ttf` metadata reports:
 
 - Family: Libertinus Sans
 - Style: Regular
@@ -13,3 +13,9 @@ Font metadata reports:
 - Source: https://github.com/alerque/libertinus
 - License: SIL Open Font License, Version 1.1
 - License URL: https://openfontlicense.org
+
+Additional fixtures:
+
+- `NotoSerif-VariableFont_wdth,wght.ttf` covers variable TTF loading.
+- `AtkinsonHyperlegibleNextVF-Variable.woff2` covers WOFF2 when the linked
+  FreeType build has Brotli support.
