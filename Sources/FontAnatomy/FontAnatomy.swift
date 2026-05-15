@@ -5,6 +5,20 @@ where Value: Sendable {
   public let descender: Value
   public let xHeight: Value
   public let capHeight: Value
+
+  public init(
+    unitsPerEm: Value,
+    ascender: Value,
+    descender: Value,
+    xHeight: Value,
+    capHeight: Value
+  ) {
+    self.unitsPerEm = unitsPerEm
+    self.ascender = ascender
+    self.descender = descender
+    self.xHeight = xHeight
+    self.capHeight = capHeight
+  }
 }
 
 extension FontAnatomy: Codable where Value: Codable {}
