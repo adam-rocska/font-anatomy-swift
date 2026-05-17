@@ -35,7 +35,8 @@ public enum ProcessRunner {
     _ executable: URL,
     arguments: [String],
     currentDirectory: URL? = nil,
-    environment: [String: String] = [:]
+    environment: [String: String] = [:],
+    standardInput: Data? = nil
   ) throws -> ProcessResult {
     let temporaryDirectory = try TemporaryDirectory(prefix: "FontAnatomyProcess")
     let stdoutURL = temporaryDirectory.appending("stdout.txt")
@@ -43,12 +44,19 @@ public enum ProcessRunner {
 
     _ = FileManager.default.createFile(atPath: stdoutURL.path, contents: nil)
     _ = FileManager.default.createFile(atPath: stderrURL.path, contents: nil)
+    if let standardInput {
+      try standardInput.write(to: temporaryDirectory.appending("stdin.bin"))
+    }
 
     let stdout = try FileHandle(forWritingTo: stdoutURL)
     let stderr = try FileHandle(forWritingTo: stderrURL)
+    let stdin = try standardInput.map { _ in
+      try FileHandle(forReadingFrom: temporaryDirectory.appending("stdin.bin"))
+    }
     defer {
       try? stdout.close()
       try? stderr.close()
+      try? stdin?.close()
     }
 
     let process = Process()
@@ -57,6 +65,7 @@ public enum ProcessRunner {
     process.currentDirectoryURL = currentDirectory
     process.standardOutput = stdout
     process.standardError = stderr
+    process.standardInput = stdin
 
     var processEnvironment = ProcessInfo.processInfo.environment
     environment.forEach { key, value in
@@ -81,13 +90,15 @@ public enum ProcessRunner {
     _ executable: URL,
     arguments: [String],
     currentDirectory: URL? = nil,
-    environment: [String: String] = [:]
+    environment: [String: String] = [:],
+    standardInput: Data? = nil
   ) throws -> ProcessResult {
     let result = try run(
       executable,
       arguments: arguments,
       currentDirectory: currentDirectory,
-      environment: environment
+      environment: environment,
+      standardInput: standardInput
     )
     guard result.exitCode == 0 else {
       throw ProcessFailure(result: result)

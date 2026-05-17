@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [ ],
+      "cwd": "${workspaceFolder:font-anatomy-swift}",
+      "name": "Debug font-anatomy",
+      "target": "font-anatomy",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug font-anatomy"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [ ],
+      "cwd": "${workspaceFolder:font-anatomy-swift}",
+      "name": "Release font-anatomy",
+      "target": "font-anatomy",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release font-anatomy"
+    }
+  ]
+}

@@ -11,7 +11,14 @@ let package = Package(
     .visionOS(.v1),
   ],
   products: [
-    .library(name: "FontAnatomy", targets: ["FontAnatomy"])
+    .library(name: "FontAnatomy", targets: ["FontAnatomy"]),
+    .executable(name: "font-anatomy", targets: ["font-anatomy"]),
+  ],
+  dependencies: [
+    .package(
+      url: "https://github.com/apple/swift-argument-parser",
+      from: "1.7.0"
+    )
   ],
   targets: [
     .systemLibrary(
@@ -28,6 +35,14 @@ let package = Package(
       dependencies: [
         .byName(name: "CFreeType")
       ]
+    ),
+    .executableTarget(
+      name: "font-anatomy",
+      dependencies: [
+        .byName(name: "CFreeType"),
+        .byName(name: "FontAnatomy"),
+        .product(name: "ArgumentParser", package: "swift-argument-parser"),
+      ],
     ),
     .target(
       name: "FontAnatomyTestSupport",
