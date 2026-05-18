@@ -10,6 +10,9 @@ public enum FontAnatomyError: Error {
   case ftLoadFailure(code: Int32)
   case missingOS2Table
   case attributeTypeCastFailure
+
+  /// MARK: WOFF2 related errors
+  case woff2DecompressionFailure(code: Int32)
 }
 
 extension FontAnatomy { public typealias Error = FontAnatomyError }

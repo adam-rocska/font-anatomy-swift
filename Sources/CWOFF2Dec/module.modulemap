@@ -1,0 +1,5 @@
+module CWOFF2Dec [system] {
+  header "CWOFF2Dec.h"
+  link "woff2dec"
+  export *
+}

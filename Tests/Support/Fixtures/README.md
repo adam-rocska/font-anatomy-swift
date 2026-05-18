@@ -17,8 +17,8 @@ keep Swift package tests self-contained.
 Additional fixtures:
 
 - `NotoSerif-VariableFont_wdth,wght.ttf` covers variable TTF loading.
-- `AtkinsonHyperlegibleNextVF-Variable.woff2` covers WOFF2 when the linked
-  FreeType build has Brotli support.
+- `AtkinsonHyperlegibleNextVF-Variable.woff2` covers WOFF2 loading through the
+  package-manager-provided WOFF2 decoder.
 - `RobotoMono-Medium.ttf`, Copyright 2015 The Roboto Mono Project Authors,
   licensed under the Apache License, Version 2.0.
 - `FiraCode-Medium.ttf`, Copyright 2014-2020 The Fira Code Project Authors,

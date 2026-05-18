@@ -18,23 +18,39 @@ struct FontFormatLoadingTests {
     ))
   }
 
-  @Test("Loads WOFF2 when the linked FreeType build has Brotli support")
-  func loadsWOFF2WhenSupportedByFreeType() throws {
+  @Test("Loads WOFF2 through package-manager-provided WOFF2 decompression")
+  func loadsWOFF2ThroughSystemWOFF2Decoder() throws {
     let url = try FontAnatomyFixture.atkinsonHyperlegibleWOFF2URL()
+    let data = try Data(contentsOf: url)
+    let expected = FontAnatomy(
+      unitsPerEm: 1000,
+      ascender: 796,
+      descender: -161,
+      xHeight: 496,
+      capHeight: 668
+    )
+
+    #expect(try FontAnatomy<Int>(url) == expected)
+    #expect(try FontAnatomy<Int>(data) == expected)
+    #expect(try FontAnatomy<Int>(Array(data)) == expected)
+
+    let unsafeAnatomy = try data.withUnsafeBytes {
+      try FontAnatomy<Int>($0)
+    }
+    #expect(unsafeAnatomy == expected)
+  }
+
+  @Test("Rejects WOFF2-shaped garbage through the WOFF2 decompression path")
+  func rejectsInvalidWOFF2ThroughDecompressionPath() {
+    let invalidWOFF2 = Array("wOF2not a real font".utf8)
 
     do {
-      let anatomy = try FontAnatomy<Int>(url)
-      #expect(anatomy == FontAnatomy(
-        unitsPerEm: 1000,
-        ascender: 796,
-        descender: -161,
-        xHeight: 496,
-        capHeight: 668
-      ))
-    } catch FontAnatomyError.ftLoadFailure(let code) {
+      _ = try FontAnatomy<Int>(invalidWOFF2)
+      Issue.record("Expected invalid WOFF2 bytes to fail")
+    } catch FontAnatomyError.woff2DecompressionFailure(let code) {
       #expect(code != 0)
     } catch {
-      Issue.record("Unexpected WOFF2 error: \(error)")
+      Issue.record("Unexpected error: \(error)")
     }
   }
 

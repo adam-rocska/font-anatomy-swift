@@ -109,6 +109,7 @@ private func expectFreeTypeRejection(_ bytes: [UInt8]) {
   } catch FontAnatomyError.ftLoadFailure {
   } catch FontAnatomyError.missingOS2Table {
   } catch FontAnatomyError.attributeTypeCastFailure {
+  } catch FontAnatomyError.woff2DecompressionFailure {
   } catch {
     Issue.record("Unexpected error: \(error)")
   }

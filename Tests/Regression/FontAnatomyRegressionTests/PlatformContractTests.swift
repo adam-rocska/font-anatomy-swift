@@ -51,6 +51,21 @@ struct PlatformContractTests {
     #expect(!contents.contains("CoreText"))
     #expect(!contents.contains("ApplicationServices"))
   }
+
+  @Test("CWOFF2 shim stays limited to WOFF2 headers")
+  func cWOFF2ShimStaysNarrow() throws {
+    let header = PackagePaths.root
+      .appendingPathComponent("Sources")
+      .appendingPathComponent("CWOFF2")
+      .appendingPathComponent("include")
+      .appendingPathComponent("CWOFF2.h")
+    let contents = try String(contentsOf: header, encoding: .utf8)
+
+    #expect(contents.contains("CWOFF2Decompress"))
+    #expect(contents.contains("CWOFF2DataFree"))
+    #expect(!contents.contains("CoreText"))
+    #expect(!contents.contains("ApplicationServices"))
+  }
 }
 
 private let appleFontIntegrationFiles: Set<String> = [

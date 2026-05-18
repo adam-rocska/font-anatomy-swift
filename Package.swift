@@ -30,10 +30,27 @@ let package = Package(
         .yum(["freetype-devel"]),
       ]
     ),
+    .systemLibrary(
+      name: "CWOFF2Dec",
+      pkgConfig: "libwoff2dec",
+      providers: [
+        .brew(["woff2"]),
+        .apt(["libwoff-dev"]),
+        .yum(["woff2-devel"]),
+      ]
+    ),
+    .target(
+      name: "CWOFF2",
+      dependencies: [
+        .byName(name: "CWOFF2Dec")
+      ],
+      publicHeadersPath: "include"
+    ),
     .target(
       name: "FontAnatomy",
       dependencies: [
-        .byName(name: "CFreeType")
+        .byName(name: "CFreeType"),
+        .byName(name: "CWOFF2"),
       ]
     ),
     .executableTarget(

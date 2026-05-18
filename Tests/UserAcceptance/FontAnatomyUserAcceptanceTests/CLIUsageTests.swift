@@ -38,6 +38,19 @@ struct CLIUsageTests {
     )
   }
 
+  @Test("The CLI emits JSON from WOFF2 input")
+  func emitsJSONFromWOFF2() throws {
+    let input = try Data(
+      contentsOf: FontAnatomyFixture.atkinsonHyperlegibleWOFF2URL()
+    )
+    let result = try runSuccessfulCLI(input: input)
+
+    #expect(
+      result.stdout
+        == #"{"unitsPerEm":1000,"ascender":796,"descender":-161,"xHeight":496,"capHeight":668}"#
+    )
+  }
+
   @Test("The CLI emits Markdown when requested")
   func emitsMarkdown() throws {
     let input = try Data(contentsOf: poppinsRegularURL())

@@ -102,6 +102,7 @@ struct FreeTypeFontLoadingTests {
       Issue.record("Expected FreeType to reject invalid bytes")
     } catch FontAnatomyError.ftCantOpenResource {
     } catch FontAnatomyError.ftLoadFailure {
+    } catch FontAnatomyError.woff2DecompressionFailure {
     } catch {
       Issue.record("Unexpected error: \(error)")
     }
