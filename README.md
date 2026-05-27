@@ -10,25 +10,31 @@ The first working slice includes:
 - extraction of `unitsPerEm`, `ascender`, `descender`, `xHeight`, and `capHeight`
 - relative, concretized, and equated metric transforms
 
-## FreeType Dependency
+## Font Loading Backends
 
-This package currently uses a SwiftPM `systemLibrary` target named `CFreeType`.
-On development machines it expects FreeType to be available through `pkg-config`
-as `freetype2`.
+The library target uses platform-native font loading on Apple platforms and a
+SwiftPM `systemLibrary` backend on non-Apple platforms.
+
+- Apple app targets use CoreText/CoreGraphics and do not require Homebrew
+  FreeType or WOFF2 headers.
+- Linux, Android, WASI, Windows, and OpenBSD targets use SwiftPM system
+  libraries named `CFreeType` and `CWOFF2`. Toolchains must expose FreeType and
+  WOFF2 through `pkg-config` as `freetype2` and `libwoff2dec`.
+- The `font-anatomy` executable still uses FreeType directly for CLI metadata
+  extraction on macOS/Linux.
 
 Install examples:
 
 ```sh
-brew install freetype
+brew install freetype woff2
 ```
 
 ```sh
-apt-get install libfreetype6-dev
+apt-get install libfreetype6-dev libwoff-dev
 ```
 
-WOFF2 support depends on the linked FreeType library being compiled with Brotli
-support. The Swift package does not paper over that: a FreeType build without
-Brotli will load TTF/OTF fonts but reject WOFF2 files.
+WOFF2 support comes from CoreGraphics on Apple platforms and `libwoff2dec` on
+non-Apple C-backend platforms.
 
 ## Usage
 
@@ -44,9 +50,8 @@ let twelvePointXHeight = anatomy.concretized(\.xHeight, as: 12)
 
 ## Portability
 
-The Swift layer has no Darwin-only font APIs. The portability contract is the C
-FreeType ABI: every target platform must provide headers and a library for the
-same target triple.
+The Swift layer keeps Apple font APIs compile-gated. Non-Apple platforms need a
+C font backend for the same target triple.
 
 See [FreeTypePortability.md](./FreeTypePortability.md) for the current platform
 position and the next step toward a fully vendored FreeType backend.

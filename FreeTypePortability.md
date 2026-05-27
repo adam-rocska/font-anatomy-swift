@@ -1,14 +1,22 @@
 # FreeType Portability
 
-This repository uses the FreeType C library directly through a SwiftPM
-`systemLibrary` target. That gives the Swift code a stable C boundary without
-depending on a third-party Swift wrapper.
+This repository uses two font-loading backends:
+
+- Apple library builds use CoreText/CoreGraphics for in-memory TTF, OTF, and
+  WOFF2 loading.
+- Linux, Android, WASI, Windows, and OpenBSD library builds use FreeType and
+  WOFF2 through SwiftPM `systemLibrary` targets.
+
+The split keeps Xcode app targets independent from Homebrew headers while still
+leaving a stable C boundary for platforms that need FreeType.
 
 ## Current Backend
 
-- `CFreeType` imports `<ft2build.h>`, `FT_FREETYPE_H`, and
+- Apple `FontAnatomy` file/data/byte initializers create a `CGFont`, wrap it in
+  `CTFont`, and read the `head`, `hhea`, and `OS/2` tables through CoreText.
+- Non-Apple `CFreeType` imports `<ft2build.h>`, `FT_FREETYPE_H`, and
   `FT_TRUETYPE_TABLES_H`.
-- `FontAnatomy` calls `FT_Init_FreeType`, `FT_New_Memory_Face`,
+- Non-Apple `FontAnatomy` calls `FT_Init_FreeType`, `FT_New_Memory_Face`,
   `FT_Get_Sfnt_Table`, `FT_Done_Face`, and `FT_Done_FreeType`.
 - Swift code uses in-memory font bytes, so the core path is not tied to POSIX
   file APIs.
@@ -16,23 +24,22 @@ depending on a third-party Swift wrapper.
 ## Platform Requirements
 
 The package can build for a platform when that platform's Swift toolchain can
-also see a FreeType build for the same target triple.
+also see a font backend for the same target triple.
 
-- Apple platforms: provide FreeType headers and a static library/XCFramework
-  built for macOS, iOS, tvOS, watchOS, visionOS, and simulator variants.
+- Apple platforms: no external FreeType or WOFF2 dependency is required for the
+  library product.
 - Linux: install `libfreetype6-dev` or the distribution equivalent that exposes
-  `freetype2.pc`.
-- Android: provide a cross-compiled FreeType for the Android NDK target and make
-  its `pkg-config` metadata visible during the SwiftPM build.
-- WASI/WebAssembly: provide a WASI-compatible FreeType build and make its
-  headers and archive visible to the SwiftPM target.
+  `freetype2.pc`, and install WOFF2 development files that expose
+  `libwoff2dec.pc`.
+- Android, WASI/WebAssembly, Windows, and OpenBSD: provide FreeType and WOFF2
+  builds for the target triple and make their `pkg-config` metadata visible to
+  SwiftPM.
 
 ## WOFF2
 
-WOFF2 is not automatic. FreeType needs Brotli support enabled at FreeType build
-time. A backend that must support TTF, OTF, and WOFF2 everywhere should vendor
-FreeType and Brotli source, then build both for each Swift target triple.
+Apple builds rely on CoreGraphics' WOFF2 support. Non-Apple C-backend builds use
+`libwoff2dec` before passing decompressed SFNT bytes to FreeType.
 
-That vendored backend is the next portability step. The current system-library
-backend is enough to prove the direct C API boundary and to keep the Swift
-library code independent from platform font frameworks.
+A backend that must support TTF, OTF, and WOFF2 on every non-Apple target should
+vendor FreeType, WOFF2, and Brotli source, then build them for each Swift target
+triple. That vendored backend is the next portability step.

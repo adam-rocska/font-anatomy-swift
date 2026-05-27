@@ -3,6 +3,15 @@
   import CoreText
 
   extension FontAnatomy where Value: Numeric {
+    public init(_ bytes: UnsafeRawBufferPointer) throws {
+      guard bytes.count > 0, let baseAddress = bytes.baseAddress else {
+        throw Error.ftCantOpenResource
+      }
+
+      let data = Data(bytes: baseAddress, count: bytes.count)
+      try self.init(coreTextData: data)
+    }
+
     public init(of font: CTFont) throws {
       guard let os2 = font.os2Table else {
         throw Error.missingOS2Table
@@ -33,6 +42,24 @@
         xHeight: xHeight,
         capHeight: capHeight
       )
+    }
+
+    private init(coreTextData data: Data) throws {
+      guard let provider = CGDataProvider(data: data as CFData) else {
+        throw data.isWOFF2
+          ? Error.woff2DecompressionFailure(code: -1)
+          : Error.ftLoadFailure(code: -1)
+      }
+
+      guard let font = CGFont(provider) else {
+        throw data.isWOFF2
+          ? Error.woff2DecompressionFailure(code: -1)
+          : Error.ftLoadFailure(code: -1)
+      }
+
+      let unitsPerEm = font.unitsPerEm
+      let size = unitsPerEm > 0 ? CGFloat(unitsPerEm) : 1
+      try self.init(of: CTFontCreateWithGraphicsFont(font, size, nil, nil))
     }
   }
 
@@ -82,6 +109,21 @@
       return UInt16(
         exactly: CTFontGetUnitsPerEm(self)
       )
+    }
+  }
+
+  private extension Data {
+    var isWOFF2: Bool {
+      withUnsafeBytes { bytes in
+        guard bytes.count >= 4 else { return false }
+        guard let baseAddress = bytes.baseAddress else { return false }
+
+        let bytes = baseAddress.assumingMemoryBound(to: UInt8.self)
+        return bytes[0] == 0x77
+          && bytes[1] == 0x4F
+          && bytes[2] == 0x46
+          && bytes[3] == 0x32
+      }
     }
   }
 #endif
