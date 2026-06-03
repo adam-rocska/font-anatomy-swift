@@ -47,19 +47,22 @@ let package = Package(
     .target(
       name: "CWOFF2",
       dependencies: ["CWOFF2Dec"],
-      publicHeadersPath: "include"
+      path: "Sources/plumbing/CWOFF2",
+      publicHeadersPath: "include",
     ),
     .systemLibrary(
       name: "CFreeType",
+      path: "Sources/Plumbing/CFreeType",
       pkgConfig: "freetype2",
       providers: [
         .brew(["freetype"]),
         .apt(["libfreetype6-dev"]),
         .yum(["freetype-devel"]),
-      ]
+      ],
     ),
     .systemLibrary(
       name: "CWOFF2Dec",
+      path: "Sources/Plumbing/CWOFF2Dec",
       pkgConfig: "libwoff2dec",
       providers: [
         .brew(["woff2"]),
