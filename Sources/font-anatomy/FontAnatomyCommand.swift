@@ -135,11 +135,6 @@ struct FontAnatomyCommand: ParsableCommand {
   }
 }
 
-enum OutputFormat: String, ExpressibleByArgument {
-  case json
-  case md
-}
-
 enum Metric: String, ExpressibleByArgument {
   case unitsPerEm
   case ascender
