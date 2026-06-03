@@ -8,7 +8,7 @@ struct FontAnatomyCommand: ParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "font-anatomy",
     abstract: "Extract font anatomy metrics from font bytes.",
-    version: "0.0.0",
+    version: versions.head.name,
     helpNames: .long
   )
 
@@ -59,9 +59,10 @@ struct FontAnatomyCommand: ParsableCommand {
     }
 
     let anatomy = try FontAnatomy<Double>(input)
-    let transformed = concretize.map {
-      anatomy.concretized($0.keyPath, as: value!)
-    } ?? anatomy
+    let transformed =
+      concretize.map {
+        anatomy.concretized($0.keyPath, as: value!)
+      } ?? anatomy
 
     switch outputFormat {
     case .json:
@@ -72,7 +73,8 @@ struct FontAnatomyCommand: ParsableCommand {
   }
 
   private func writeJSON(_ anatomy: FontAnatomy<Double>) {
-    let json = "{"
+    let json =
+      "{"
       + "\"unitsPerEm\":\(formatJSON(anatomy.unitsPerEm)),"
       + "\"ascender\":\(formatJSON(anatomy.ascender)),"
       + "\"descender\":\(formatJSON(anatomy.descender)),"
@@ -117,7 +119,10 @@ struct FontAnatomyCommand: ParsableCommand {
       "",
       markdownTable(
         ["Trait", "Absolute Value", "Relative Value"],
-        ["Units Per Em", format(anatomy.unitsPerEm), format(relative.unitsPerEm)],
+        [
+          "Units Per Em", format(anatomy.unitsPerEm),
+          format(relative.unitsPerEm),
+        ],
         ["Ascender", format(anatomy.ascender), format(relative.ascender)],
         ["Descender", format(anatomy.descender), format(relative.descender)],
         ["X-Height", format(anatomy.xHeight), format(relative.xHeight)],
@@ -258,8 +263,8 @@ private struct NameCandidate {
   }
 }
 
-private extension String {
-  init?(sfntName: FT_SfntName) {
+extension String {
+  fileprivate init?(sfntName: FT_SfntName) {
     guard let string = sfntName.string else { return nil }
 
     let bytes = Array(
@@ -299,9 +304,10 @@ private func markdownTable(_ rows: [String]...) -> String {
 
   let separator = widths.map { String(repeating: "-", count: $0) }
   return ([rows[0], separator] + rows.dropFirst()).map { row in
-    "| " + row.enumerated().map { column, cell in
-      cell.padding(toLength: widths[column], withPad: " ", startingAt: 0)
-    }.joined(separator: " | ") + " |"
+    "| "
+      + row.enumerated().map { column, cell in
+        cell.padding(toLength: widths[column], withPad: " ", startingAt: 0)
+      }.joined(separator: " | ") + " |"
   }.joined(separator: "\n")
 }
 

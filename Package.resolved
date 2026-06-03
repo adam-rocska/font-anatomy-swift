@@ -1,5 +1,5 @@
 {
-  "originHash" : "9f659e02e9041a96f357c604d7ac48c0b00168a25209780524002c84c4b31550",
+  "originHash" : "1de7e0b7c85130f23c5541c1642934c0393edf4a255359e1d0638ef9b9f8ea12",
   "pins" : [
     {
       "identity" : "swift-argument-parser",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "626b5b7b2f45e1b0b1c6f4a309296d1d21d7311b",
         "version" : "1.7.1"
+      }
+    },
+    {
+      "identity" : "versioninfo.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/adam-rocska/VersionInfo.swift.git",
+      "state" : {
+        "revision" : "e037acc00f38ae1c72687898ceba4a263077c622",
+        "version" : "1.0.0"
       }
     }
   ],

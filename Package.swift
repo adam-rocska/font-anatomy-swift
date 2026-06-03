@@ -18,7 +18,11 @@ let package = Package(
     .package(
       url: "https://github.com/apple/swift-argument-parser",
       from: "1.7.0"
-    )
+    ),
+    .package(
+      url: "https://github.com/adam-rocska/VersionInfo.swift.git",
+      from: "1.0.0"
+    ),
   ],
   targets: [
     .target(
@@ -41,6 +45,9 @@ let package = Package(
         .byName(name: "FontAnatomy"),
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
       ],
+      plugins: [
+        .plugin(name: "VersionInfoPlugin", package: "VersionInfo.swift")
+      ]
     ),
 
     /// MARK: C Font Libraries
