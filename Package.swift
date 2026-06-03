@@ -50,9 +50,9 @@ let package = Package(
       name: "FontAnatomy",
       dependencies: [
         .byName(
-          name: "CFreeType", condition: .when(platforms: cFontBackendPlatforms)),
+          name: "CFreeType", condition: .when(platforms: cFontPlatforms)),
         .byName(
-          name: "CWOFF2", condition: .when(platforms: cFontBackendPlatforms)),
+          name: "CWOFF2", condition: .when(platforms: cFontPlatforms)),
       ]
     ),
     .executableTarget(
@@ -98,7 +98,8 @@ let package = Package(
   ]
 )
 
-let cFontBackendPlatforms: [Platform] = [
+/// Platforms where the C font libraries are available.
+let cFontPlatforms: [Platform] = [
   .linux,
   .android,
   .wasi,
