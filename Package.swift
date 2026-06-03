@@ -1,14 +1,6 @@
 // swift-tools-version: 6.0
 import PackageDescription
 
-let cFontBackendPlatforms: [Platform] = [
-  .linux,
-  .android,
-  .wasi,
-  .windows,
-  .openbsd,
-]
-
 let package = Package(
   name: "FontAnatomy",
   platforms: [
@@ -57,8 +49,10 @@ let package = Package(
     .target(
       name: "FontAnatomy",
       dependencies: [
-        .byName(name: "CFreeType", condition: .when(platforms: cFontBackendPlatforms)),
-        .byName(name: "CWOFF2", condition: .when(platforms: cFontBackendPlatforms)),
+        .byName(
+          name: "CFreeType", condition: .when(platforms: cFontBackendPlatforms)),
+        .byName(
+          name: "CWOFF2", condition: .when(platforms: cFontBackendPlatforms)),
       ]
     ),
     .executableTarget(
@@ -103,3 +97,11 @@ let package = Package(
     ),
   ]
 )
+
+let cFontBackendPlatforms: [Platform] = [
+  .linux,
+  .android,
+  .wasi,
+  .windows,
+  .openbsd,
+]
