@@ -21,6 +21,34 @@ let package = Package(
     )
   ],
   targets: [
+    .target(
+      name: "FontAnatomy",
+      dependencies: [
+        .byName(
+          name: "CFreeType",
+          condition: .when(platforms: .cFont)
+        ),
+        .byName(
+          name: "CWOFF2",
+          condition: .when(platforms: .cFont)
+        ),
+      ]
+    ),
+    .executableTarget(
+      name: "font-anatomy",
+      dependencies: [
+        .byName(name: "CFreeType"),
+        .byName(name: "FontAnatomy"),
+        .product(name: "ArgumentParser", package: "swift-argument-parser"),
+      ],
+    ),
+
+    /// MARK: C Font Libraries
+    .target(
+      name: "CWOFF2",
+      dependencies: ["CWOFF2Dec"],
+      publicHeadersPath: "include"
+    ),
     .systemLibrary(
       name: "CFreeType",
       pkgConfig: "freetype2",
@@ -39,38 +67,8 @@ let package = Package(
         .yum(["woff2-devel"]),
       ]
     ),
-    .target(
-      name: "CWOFF2",
-      dependencies: [
-        .byName(name: "CWOFF2Dec")
-      ],
-      publicHeadersPath: "include"
-    ),
-    .target(
-      name: "FontAnatomy",
-      dependencies: [
-        .byName(
-          name: "CFreeType", condition: .when(platforms: cFontPlatforms)),
-        .byName(
-          name: "CWOFF2", condition: .when(platforms: cFontPlatforms)),
-      ]
-    ),
-    .executableTarget(
-      name: "font-anatomy",
-      dependencies: [
-        .byName(name: "CFreeType"),
-        .byName(name: "FontAnatomy"),
-        .product(name: "ArgumentParser", package: "swift-argument-parser"),
-      ],
-    ),
-    .target(
-      name: "FontAnatomyTestSupport",
-      dependencies: ["FontAnatomy"],
-      path: "Tests/Support",
-      resources: [
-        .copy("Fixtures")
-      ]
-    ),
+
+    /// MARK: Tests
     .testTarget(
       name: "FontAnatomyTests",
       dependencies: [
@@ -95,14 +93,24 @@ let package = Package(
       ],
       path: "Tests/UserAcceptance/FontAnatomyUserAcceptanceTests"
     ),
+    .target(
+      name: "FontAnatomyTestSupport",
+      dependencies: ["FontAnatomy"],
+      path: "Tests/TestSupport",
+      resources: [
+        .copy("Fixtures")
+      ]
+    ),
   ]
 )
 
 /// Platforms where the C font libraries are available.
-let cFontPlatforms: [Platform] = [
-  .linux,
-  .android,
-  .wasi,
-  .windows,
-  .openbsd,
-]
+extension Array where Element == Platform {
+  static let cFont: Self = [
+    .linux,
+    .android,
+    .wasi,
+    .windows,
+    .openbsd,
+  ]
+}
