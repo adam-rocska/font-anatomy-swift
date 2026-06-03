@@ -1,5 +1,5 @@
 import Foundation
-import FontAnatomy
+@testable import FontAnatomy
 
 public enum FontAnatomyFixture {
   public static func libertinusSansRegularURL() throws -> URL {
